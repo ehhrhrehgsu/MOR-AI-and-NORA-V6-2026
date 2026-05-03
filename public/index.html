@@ -1,115 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NORA AI V10 | Facebook Bot Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NORA AI V10 | FBBOT Dashboard</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 </head>
 <body>
-  <div class="bg-anim"></div>
+<div class="bg-anim"></div>
 
-  <header>
-    <div class="logo-wrap">
-      <div class="logo-icon">🤖</div>
-      <div class="logo-text">
-        <span class="nora">NORA</span> <span class="ai">AI</span> <span class="v10">V10</span>
-        <div class="tagline">Facebook Bot Dashboard</div>
-      </div>
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <div class="logo-icon">🤖</div>
+    <div class="logo-text">
+      <span class="nora">NORA</span> <span class="ai">AI</span> <span class="v10">V10</span>
+      <div class="tagline">Facebook Bot Dashboard</div>
     </div>
+  </div>
+  <div class="header-right">
     <div class="header-status">
       <span class="dot pulse"></span>
       <span id="header-session-count">0</span> Active Bot(s)
     </div>
-  </header>
+    <button class="three-dots-btn" onclick="openDotsMenu()" title="More Options">&#8942;</button>
+  </div>
+</header>
 
-  <main>
-    <section class="active-sessions-section">
-      <h2 class="section-title">⚡ Active Sessions</h2>
-      <div id="sessions-container" class="sessions-grid">
-        <div class="no-sessions">No active bots yet. Start one below!</div>
-      </div>
-    </section>
-
-    <section class="setup-section">
-      <h2 class="section-title">🚀 Start New Bot</h2>
-      <div class="setup-card">
-
-        <div class="form-group">
-          <label>📋 App State / FBSTATE (C3C)</label>
-          <textarea id="appstate-input" placeholder='Paste your FBSTATE or AppState JSON here...&#10;&#10;Example: [{"key":"c_user","value":"...","domain":"..."}]&#10;&#10;Or C3C format: {"appState":[...]}'></textarea>
-          <div class="field-hint">Paste your Facebook AppState or FBSTATE JSON (C3C format supported)</div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group half">
-            <label>🔑 Bot Prefix</label>
-            <input type="text" id="prefix-input" placeholder="e.g.  !  ?  #  /  ." maxlength="5" />
-            <div class="field-hint">Command trigger character(s)</div>
-          </div>
-          <div class="form-group half">
-            <label>👑 Admin UID (Facebook)</label>
-            <input type="text" id="admin-uid-input" placeholder="e.g. 100012345678901" />
-            <div class="field-hint">Your Facebook user ID</div>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group half">
-            <label>⚙️ Select Commands</label>
-            <div class="select-toolbar">
-              <button class="btn-small" onclick="selectAll('commands')">Select All</button>
-              <button class="btn-small danger" onclick="deselectAll('commands')">Clear</button>
-            </div>
-            <div id="commands-list" class="check-list">
-              <div class="loading-items">Loading commands...</div>
-            </div>
-          </div>
-          <div class="form-group half">
-            <label>📡 Select Events</label>
-            <div class="select-toolbar">
-              <button class="btn-small" onclick="selectAll('events')">Select All</button>
-              <button class="btn-small danger" onclick="deselectAll('events')">Clear</button>
-            </div>
-            <div id="events-list" class="check-list">
-              <div class="loading-items">Loading events...</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="submit-wrap">
-          <button id="submit-btn" class="btn-submit" onclick="openVerify()">
-            <span>🚀 LAUNCH BOT</span>
-          </button>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <div id="verify-modal" class="modal hidden">
-    <div class="modal-box">
-      <div class="modal-icon">🤖</div>
-      <h2>Verification Required</h2>
-      <p>Before launching the bot, please verify:</p>
-      <p class="verify-question">Are you a <strong>Human</strong> or an <strong>AI</strong>?</p>
-      <div class="verify-buttons">
-        <button class="verify-btn human" onclick="verify('human')">
-          <span class="verify-icon">🧠</span>
-          <span>Human</span>
-        </button>
-        <button class="verify-btn ai" onclick="verify('ai')">
-          <span class="verify-icon">🤖</span>
-          <span>AI</span>
-        </button>
-      </div>
-      <button class="btn-cancel" onclick="closeVerify()">Cancel</button>
+<!-- MAIN -->
+<main>
+  <!-- ACTIVE SESSIONS -->
+  <section class="active-sessions-section">
+    <h2 class="section-title">⚡ Active Sessions</h2>
+    <div id="sessions-container" class="sessions-grid">
+      <div class="no-sessions">No active bots yet. Start one below!</div>
     </div>
+  </section>
+
+  <!-- SIMPLE AI CIRCLE BUTTON -->
+  <div class="simple-ai-fab-wrap">
+    <button class="simple-ai-fab" onclick="openSimpleAI()" title="SIMPLE AI Chat">
+      <span class="fab-icon">🧠</span>
+      <span class="fab-label">SIMPLE AI</span>
+    </button>
   </div>
 
-  <div id="status-toast" class="toast hidden"></div>
+  <!-- START BOT FORM -->
+  <section class="setup-section">
+    <h2 class="section-title">🚀 Start New Bot</h2>
+    <div class="setup-card">
+      <div class="form-group">
+        <label>📋 App State / FBSTATE (C3C)</label>
+        <textarea id="appstate-input" placeholder='Paste your FBSTATE or AppState JSON here...&#10;&#10;Example: [{"key":"c_user","value":"..."}]&#10;Or C3C: {"appState":[...]}'></textarea>
+        <div class="field-hint">Paste your Facebook AppState or FBSTATE JSON</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group half">
+          <label>🔑 Bot Prefix</label>
+          <input type="text" id="prefix-input" placeholder="e.g.  !  ?  #  /  ." maxlength="5"/>
+          <div class="field-hint">Command trigger character(s)</div>
+        </div>
+        <div class="form-group half">
+          <label>👑 Admin UID (Facebook)</label>
+          <input type="text" id="admin-uid-input" placeholder="e.g. 100012345678901"/>
+          <div class="field-hint">Your Facebook user ID</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group half">
+          <label>⚙️ Select Commands</label>
+          <div class="select-toolbar">
+            <button class="btn-small" onclick="selectAll('commands')">Select All</button>
+            <button class="btn-small danger" onclick="deselectAll('commands')">Clear</button>
+          </div>
+          <div id="commands-list" class="check-list"><div class="loading-items">Loading...</div></div>
+        </div>
+        <div class="form-group half">
+          <label>📡 Select Events</label>
+          <div class="select-toolbar">
+            <button class="btn-small" onclick="selectAll('events')">Select All</button>
+            <button class="btn-small danger" onclick="deselectAll('events')">Clear</button>
+          </div>
+          <div id="events-list" class="check-list"><div class="loading-items">Loading...</div></div>
+        </div>
+      </div>
+      <div class="submit-wrap">
+        <button id="submit-btn" class="btn-submit" onclick="openVerify()">
+          <span>🚀 LAUNCH BOT</span>
+        </button>
+      </div>
+    </div>
+  </section>
+</main>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="app.js"></script>
+<!-- ===================== SIMPLE AI PANEL ===================== -->
+<div id="simple-ai-panel" class="ai-panel hidden">
+  <div class="ai-panel-inner">
+    <div class="ai-panel-header">
+      <button class="ai-info-btn" onclick="toggleAiInfo()" title="Info">ℹ️</button>
+      <div class="ai-panel-title">🧠 SIMPLE AI</div>
+      <div class="ai-panel-actions">
+        <button class="ai-action-btn" onclick="aiHelp()" title="Help">❓</button>
+        <button class="ai-action-btn" onclick="clearAiChat()" title="Clear Chat">🗑️</button>
+        <button class="ai-action-btn danger" onclick="closeSimpleAI()" title="Exit">✖</button>
+      </div>
+    </div>
+    <div id="ai-info-bar" class="ai-info-bar hidden">
+      📝 THIS IS AUTOBOT NORA V10 POWERED BY BASE44
+    </div>
+    <div id="ai-messages" class="ai-messages">
+      <div class="ai-msg bot-msg">
+        <span class="ai-avatar">🤖</span>
+        <div class="ai-bubble">Hello! I'm <b>SIMPLE AI</b> (NORA V10). My prefix is <b>/</b><br/>Type <b>/help</b> to see all commands!</div>
+      </div>
+    </div>
+    <div class="ai-emoji-bar" id="ai-emoji-bar">
+      <button onclick="insertEmoji('😊')">😊</button>
+      <button onclick="insertEmoji('😂')">😂</button>
+      <button onclick="insertEmoji('❤️')">❤️</button>
+      <button onclick="insertEmoji('🔥')">🔥</button>
+      <button onclick="insertEmoji('👍')">👍</button>
+      <button onclick="insertEmoji('🤖')">🤖</button>
+      <button onclick="insertEmoji('✨')">✨</button>
+      <button onclick="insertEmoji('💯')">💯</button>
+      <button onclick="insertEmoji('🎉')">🎉</button>
+      <button onclick="insertEmoji('😎')">😎</button>
+    </div>
+    <div class="ai-input-wrap">
+      <button class="ai-emoji-toggle" onclick="toggleEmojiBar()" title="Emoji">😊</button>
+      <input type="text" id="ai-input" placeholder="Type /help or /ai hello..." onkeydown="if(event.key==='Enter')sendAiMessage()"/>
+      <button class="ai-send-btn" onclick="sendAiMessage()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 3 DOTS MENU ===================== -->
+<div id="dots-overlay" class="modal hidden">
+  <div class="modal-box wide" onclick="event.stopPropagation()">
+    <!-- PIN SCREEN -->
+    <div id="pin-screen">
+      <div class="modal-icon">🔐</div>
+      <h2>Admin Access</h2>
+      <p>Enter PIN to access features</p>
+      <div class="pin-inputs">
+        <input type="password" id="pin-input" class="pin-field" maxlength="4" placeholder="••••" onkeydown="if(event.key==='Enter')checkPin()"/>
+      </div>
+      <button class="btn-submit small" onclick="checkPin()">🔓 Unlock</button>
+      <div id="pin-error" class="pin-error hidden">❌ Wrong PIN. Try again.</div>
+      <button class="btn-cancel" onclick="closeDotsMenu()">Cancel</button>
+    </div>
+    <!-- FEATURES SCREEN -->
+    <div id="features-screen" class="hidden">
+      <div class="modal-icon">⚙️</div>
+      <h2>Admin Features</h2>
+      <div class="features-tabs">
+        <button class="ftab active" onclick="switchFTab('cmd-tab', this)">➕ Add Command</button>
+        <button class="ftab" onclick="switchFTab('evt-tab', this)">📡 Add Event</button>
+      </div>
+      <!-- CMD TAB -->
+      <div id="cmd-tab" class="ftab-content">
+        <label class="flabel">Paste GoatBot / AutoBot Command Code:</label>
+        <textarea id="cmd-code-input" class="code-textarea" placeholder="module.exports = {&#10;  config: { name: 'tiktok', ... },&#10;  onStart: async ({ api, event, args }) => { ... }&#10;};"></textarea>
+        <div class="feature-note">Supports GoatBot format (onStart) and standard format (run).</div>
+        <div class="feature-btns">
+          <button class="btn-submit small" onclick="submitCommand()">✅ Confirm & Add Command</button>
+          <button class="btn-small danger" onclick="document.getElementById('cmd-code-input').value=''">🗑 Clear</button>
+        </div>
+        <div id="cmd-result" class="feature-result hidden"></div>
+      </div>
+      <!-- EVT TAB -->
+      <div id="evt-tab" class="ftab-content hidden">
+        <label class="flabel">Paste GoatBot / AutoBot Event Code:</label>
+        <textarea id="evt-code-input" class="code-textarea" placeholder="module.exports = {&#10;  config: { name: 'leave', ... },&#10;  onStart: async ({ api, event }) => { ... }&#10;};"></textarea>
+        <div class="feature-note">Supports GoatBot format (onStart) and standard format (run).</div>
+        <div class="feature-btns">
+          <button class="btn-submit small" onclick="submitEvent()">✅ Confirm & Add Event</button>
+          <button class="btn-small danger" onclick="document.getElementById('evt-code-input').value=''">🗑 Clear</button>
+        </div>
+        <div id="evt-result" class="feature-result hidden"></div>
+      </div>
+      <button class="btn-cancel" style="margin-top:14px" onclick="closeDotsMenu()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== VERIFY MODAL ===================== -->
+<div id="verify-modal" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-icon">🤖</div>
+    <h2>Verification Required</h2>
+    <p>Before launching the bot, please verify:</p>
+    <p class="verify-question">Are you a <strong>Human</strong> or an <strong>AI</strong>?</p>
+    <div class="verify-buttons">
+      <button class="verify-btn human" onclick="verify('human')">
+        <span class="verify-icon">🧠</span><span>Human</span>
+      </button>
+      <button class="verify-btn ai-v" onclick="verify('ai')">
+        <span class="verify-icon">🤖</span><span>AI</span>
+      </button>
+    </div>
+    <button class="btn-cancel" onclick="closeVerify()">Cancel</button>
+  </div>
+</div>
+
+<div id="status-toast" class="toast hidden"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
