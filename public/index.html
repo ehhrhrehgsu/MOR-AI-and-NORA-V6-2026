@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NORA AI V10 | Facebook Bot Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="bg-anim"></div>
+
+  <header>
+    <div class="logo-wrap">
+      <div class="logo-icon">🤖</div>
+      <div class="logo-text">
+        <span class="nora">NORA</span> <span class="ai">AI</span> <span class="v10">V10</span>
+        <div class="tagline">Facebook Bot Dashboard</div>
+      </div>
+    </div>
+    <div class="header-status">
+      <span class="dot pulse"></span>
+      <span id="header-session-count">0</span> Active Bot(s)
+    </div>
+  </header>
+
+  <main>
+    <section class="active-sessions-section">
+      <h2 class="section-title">⚡ Active Sessions</h2>
+      <div id="sessions-container" class="sessions-grid">
+        <div class="no-sessions">No active bots yet. Start one below!</div>
+      </div>
+    </section>
+
+    <section class="setup-section">
+      <h2 class="section-title">🚀 Start New Bot</h2>
+      <div class="setup-card">
+
+        <div class="form-group">
+          <label>📋 App State / FBSTATE (C3C)</label>
+          <textarea id="appstate-input" placeholder='Paste your FBSTATE or AppState JSON here...&#10;&#10;Example: [{"key":"c_user","value":"...","domain":"..."}]&#10;&#10;Or C3C format: {"appState":[...]}'></textarea>
+          <div class="field-hint">Paste your Facebook AppState or FBSTATE JSON (C3C format supported)</div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <label>🔑 Bot Prefix</label>
+            <input type="text" id="prefix-input" placeholder="e.g.  !  ?  #  /  ." maxlength="5" />
+            <div class="field-hint">Command trigger character(s)</div>
+          </div>
+          <div class="form-group half">
+            <label>👑 Admin UID (Facebook)</label>
+            <input type="text" id="admin-uid-input" placeholder="e.g. 100012345678901" />
+            <div class="field-hint">Your Facebook user ID</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <label>⚙️ Select Commands</label>
+            <div class="select-toolbar">
+              <button class="btn-small" onclick="selectAll('commands')">Select All</button>
+              <button class="btn-small danger" onclick="deselectAll('commands')">Clear</button>
+            </div>
+            <div id="commands-list" class="check-list">
+              <div class="loading-items">Loading commands...</div>
+            </div>
+          </div>
+          <div class="form-group half">
+            <label>📡 Select Events</label>
+            <div class="select-toolbar">
+              <button class="btn-small" onclick="selectAll('events')">Select All</button>
+              <button class="btn-small danger" onclick="deselectAll('events')">Clear</button>
+            </div>
+            <div id="events-list" class="check-list">
+              <div class="loading-items">Loading events...</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="submit-wrap">
+          <button id="submit-btn" class="btn-submit" onclick="openVerify()">
+            <span>🚀 LAUNCH BOT</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="verify-modal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-icon">🤖</div>
+      <h2>Verification Required</h2>
+      <p>Before launching the bot, please verify:</p>
+      <p class="verify-question">Are you a <strong>Human</strong> or an <strong>AI</strong>?</p>
+      <div class="verify-buttons">
+        <button class="verify-btn human" onclick="verify('human')">
+          <span class="verify-icon">🧠</span>
+          <span>Human</span>
+        </button>
+        <button class="verify-btn ai" onclick="verify('ai')">
+          <span class="verify-icon">🤖</span>
+          <span>AI</span>
+        </button>
+      </div>
+      <button class="btn-cancel" onclick="closeVerify()">Cancel</button>
+    </div>
+  </div>
+
+  <div id="status-toast" class="toast hidden"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
