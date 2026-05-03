@@ -173,6 +173,13 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:24px 20p
 .feature-result.error-r{background:rgba(255,23,68,.1);border:1px solid rgba(255,23,68,.3);color:var(--danger)}
 .feature-result.hidden{display:none}
 
+/* MUSIC FAB */
+.music-fab-wrap{position:fixed;bottom:110px;right:28px;z-index:50}
+.music-fab{background:linear-gradient(135deg,#1a1a2e,#16213e);border:2px solid rgba(0,245,255,.3);border-radius:50%;width:46px;height:46px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 4px 18px rgba(0,245,255,.2);transition:transform .2s,border-color .2s,box-shadow .2s}
+.music-fab:hover{transform:scale(1.12);border-color:var(--primary);box-shadow:0 6px 28px rgba(0,245,255,.4)}
+.music-fab.playing{border-color:var(--success);box-shadow:0 0 0 3px rgba(0,230,118,.2),0 6px 28px rgba(0,230,118,.3);animation:musicPulse 2s ease-in-out infinite}
+@keyframes musicPulse{0%,100%{box-shadow:0 0 0 3px rgba(0,230,118,.2),0 6px 28px rgba(0,230,118,.3)}50%{box-shadow:0 0 0 8px rgba(0,230,118,.05),0 6px 28px rgba(0,230,118,.5)}}
+
 /* TOAST */
 .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);border-radius:50px;padding:10px 24px;font-size:.9rem;font-weight:600;z-index:400;box-shadow:0 8px 36px rgba(0,0,0,.5)}
 .toast.hidden{display:none}

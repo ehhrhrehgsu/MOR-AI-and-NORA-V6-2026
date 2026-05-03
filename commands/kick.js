@@ -1,56 +1,29 @@
 module.exports = {
-	config: {
-		name: "kick",
-		version: "1.3",
-		author: "NTKhang",
-		countDown: 5,
-		role: 1,
-		description: {
-			vi: "Kick thành viên khỏi box chat",
-			en: "Kick member out of chat box"
-		},
-		category: "box chat",
-		guide: {
-			vi: "   {pn} @tags: dùng để kick những người được tag",
-			en: "   {pn} @tags: use to kick members who are tagged"
-		}
-	},
-
-	langs: {
-		vi: {
-			needAdmin: "Vui lòng thêm quản trị viên cho bot trước khi sử dụng tính năng này"
-		},
-		en: {
-			needAdmin: "Please add admin for bot before using this feature"
-		}
-	},
-
-	onStart: async function ({ message, event, args, threadsData, api, getLang }) {
-		const adminIDs = await threadsData.get(event.threadID, "adminIDs");
-		if (!adminIDs.includes(api.getCurrentUserID()))
-			return message.reply(getLang("needAdmin"));
-		async function kickAndCheckError(uid) {
-			try {
-				await api.removeUserFromGroup(uid, event.threadID);
-			}
-			catch (e) {
-				message.reply(getLang("needAdmin"));
-				return "ERROR";
-			}
-		}
-		if (!args[0]) {
-			if (!event.messageReply)
-				return message.SyntaxError();
-			await kickAndCheckError(event.messageReply.senderID);
-		}
-		else {
-			const uids = Object.keys(event.mentions);
-			if (uids.length === 0)
-				return message.SyntaxError();
-			if (await kickAndCheckError(uids.shift()) === "ERROR")
-				return;
-			for (const uid of uids)
-				api.removeUserFromGroup(uid, event.threadID);
-		}
-	}
+  config: {
+    name: 'kick',
+    aliases: ['remove', 'boot'],
+    description: 'Kick a tagged member from the group',
+    usage: 'kick @tag | reply to kick',
+    category: 'Admin',
+    role: 1,
+    cooldown: 5
+  },
+  async run({ api, event, args }) {
+    const { threadID, messageID, mentions, messageReply } = event;
+    const uids = Object.keys(mentions || {});
+    const targets = uids.length > 0 ? uids : (messageReply ? [messageReply.senderID] : []);
+    if (!targets.length) return api.sendMessage(
+      `👢 𝗞𝗜𝗖𝗞 𝗖𝗼𝗺𝗺𝗮𝗻𝗱\n━━━━━━━━━━━━━━━━━━━\n❌ Tag someone or reply to kick.\n📌 Usage: /kick @user`,
+      threadID, messageID
+    );
+    let kicked = 0, failed = 0;
+    for (const uid of targets) {
+      try { await api.removeUserFromGroup(uid, threadID); kicked++; }
+      catch(e) { failed++; }
+    }
+    api.sendMessage(
+      `👢 𝗞𝗜𝗖𝗞 𝗖𝗼𝗺𝗺𝗮𝗻𝗱\n━━━━━━━━━━━━━━━━━━━\n✅ Kicked: ${kicked} member(s)\n${failed?`❌ Failed: ${failed}\n`:``}━━━━━━━━━━━━━━━━━━━\n✨ 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗯𝘆 𝗡𝗼𝗿𝗮 𝗩𝟭𝟬`,
+      threadID, messageID
+    );
+  }
 };

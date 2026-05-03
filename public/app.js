@@ -228,6 +228,46 @@ function showToast(message,type='info'){
   clearTimeout(t._t);t._t=setTimeout(()=>t.classList.add('hidden'),4000);
 }
 
+/* ===== BACKGROUND MUSIC ===== */
+let musicPlaying = false;
+const music = document.getElementById('bg-music');
+if (music) music.volume = 1.0;
+
+function toggleMusic() {
+  if (!music) return;
+  if (musicPlaying) {
+    music.pause();
+    musicPlaying = false;
+    document.getElementById('music-icon').textContent = '🎵';
+    document.getElementById('music-fab-btn').classList.remove('playing');
+    showToast('🎵 Music paused', 'info');
+  } else {
+    music.volume = 1.0;
+    music.play().then(() => {
+      musicPlaying = true;
+      document.getElementById('music-icon').textContent = '🔊';
+      document.getElementById('music-fab-btn').classList.add('playing');
+      showToast('🎵 Relaxing music playing...', 'success');
+    }).catch(() => showToast('🎵 Click again to start music', 'info'));
+  }
+}
+
+function autoPlayMusic() {
+  if (!music || musicPlaying) return;
+  music.volume = 1.0;
+  music.play().then(() => {
+    musicPlaying = true;
+    document.getElementById('music-icon').textContent = '🔊';
+    document.getElementById('music-fab-btn').classList.add('playing');
+  }).catch(() => {
+    // autoplay blocked — wait for first user interaction
+    document.addEventListener('click', function once() {
+      if (!musicPlaying) toggleMusic();
+      document.removeEventListener('click', once);
+    }, { once: true });
+  });
+}
+
 /* ===== INIT ===== */
 document.addEventListener('DOMContentLoaded',()=>{
   loadCommands();loadEvents();
@@ -236,4 +276,5 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('dots-overlay').addEventListener('click',function(e){if(e.target===this)closeDotsMenu();});
   document.getElementById('pin-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkPin();});
   document.getElementById('ai-input').addEventListener('keydown',e=>{if(e.key==='Enter')sendAiMessage();});
+  setTimeout(autoPlayMusic, 800);
 });

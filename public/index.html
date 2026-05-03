@@ -8,6 +8,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 </head>
 <body>
+<!-- BACKGROUND MUSIC -->
+<audio id="bg-music" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3" type="audio/mpeg"/>
+</audio>
+<!-- MUSIC CONTROL FAB -->
+<div class="music-fab-wrap">
+  <button class="music-fab" id="music-fab-btn" onclick="toggleMusic()" title="Toggle relaxing music">
+    <span id="music-icon">🎵</span>
+  </button>
+</div>
 <div class="bg-anim"></div>
 
 <!-- HEADER -->
