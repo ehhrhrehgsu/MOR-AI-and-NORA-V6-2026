@@ -19,12 +19,26 @@
       <div class="tagline">Facebook Bot Dashboard</div>
     </div>
   </div>
+
+  <div class="header-center">
+    <div class="version-badge">v3.8 &nbsp;|&nbsp; Powered by Base44 &amp; Nora V10</div>
+    <a href="https://www.facebook.com/manuelsonyasis.3752" target="_blank" class="fb-link" title="Follow on Facebook">
+      <div class="fb-logo">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="30" height="30">
+          <circle cx="18" cy="18" r="18" fill="#1877F2"/>
+          <path d="M25 18c0-3.866-3.134-7-7-7s-7 3.134-7 7c0 3.492 2.558 6.39 5.906 6.917V20.28H15.28V18h1.626v-1.411c0-1.605.957-2.491 2.418-2.491.7 0 1.432.125 1.432.125v1.575h-.807c-.795 0-1.043.494-1.043 1.001V18h1.773l-.283 2.281h-1.49v4.636C22.441 24.39 25 21.492 25 18z" fill="white"/>
+        </svg>
+      </div>
+      <div class="fb-follow-text">FOLLOW NOW ON FACEBOOK PAGE</div>
+    </a>
+  </div>
+
   <div class="header-right">
     <div class="header-status">
       <span class="dot pulse"></span>
       <span id="header-session-count">0</span> Active Bot(s)
     </div>
-    <button class="three-dots-btn" onclick="openDotsMenu()" title="More Options">&#8942;</button>
+    <button class="three-dots-btn" onclick="openDotsMenu()" title="Admin Features">&#8942;</button>
   </div>
 </header>
 
@@ -38,7 +52,7 @@
     </div>
   </section>
 
-  <!-- SIMPLE AI CIRCLE BUTTON -->
+  <!-- SIMPLE AI FAB -->
   <div class="simple-ai-fab-wrap">
     <button class="simple-ai-fab" onclick="openSimpleAI()" title="SIMPLE AI Chat">
       <span class="fab-icon">🧠</span>
@@ -94,7 +108,7 @@
   </section>
 </main>
 
-<!-- ===================== SIMPLE AI PANEL ===================== -->
+<!-- ======= SIMPLE AI PANEL ======= -->
 <div id="simple-ai-panel" class="ai-panel hidden">
   <div class="ai-panel-inner">
     <div class="ai-panel-header">
@@ -112,10 +126,10 @@
     <div id="ai-messages" class="ai-messages">
       <div class="ai-msg bot-msg">
         <span class="ai-avatar">🤖</span>
-        <div class="ai-bubble">Hello! I'm <b>SIMPLE AI</b> (NORA V10). My prefix is <b>/</b><br/>Type <b>/help</b> to see all commands!</div>
+        <div class="ai-bubble">Hello! I'm <b>SIMPLE AI</b> (NORA V10).<br/>Prefix: <b>/</b> &nbsp;|&nbsp; Type <b>/help</b> for commands!</div>
       </div>
     </div>
-    <div class="ai-emoji-bar" id="ai-emoji-bar">
+    <div class="ai-emoji-bar hidden" id="ai-emoji-bar">
       <button onclick="insertEmoji('😊')">😊</button>
       <button onclick="insertEmoji('😂')">😂</button>
       <button onclick="insertEmoji('❤️')">❤️</button>
@@ -125,57 +139,53 @@
       <button onclick="insertEmoji('✨')">✨</button>
       <button onclick="insertEmoji('💯')">💯</button>
       <button onclick="insertEmoji('🎉')">🎉</button>
-      <button onclick="insertEmoji('😎')">😎</button>
+      <button onclick="insertEmoji('🎵')">🎵</button>
     </div>
     <div class="ai-input-wrap">
       <button class="ai-emoji-toggle" onclick="toggleEmojiBar()" title="Emoji">😊</button>
-      <input type="text" id="ai-input" placeholder="Type /help or /ai hello..." onkeydown="if(event.key==='Enter')sendAiMessage()"/>
+      <input type="text" id="ai-input" placeholder="Type /help or /ai hello..."/>
       <button class="ai-send-btn" onclick="sendAiMessage()">➤</button>
     </div>
   </div>
 </div>
 
-<!-- ===================== 3 DOTS MENU ===================== -->
+<!-- ======= 3 DOTS MENU ======= -->
 <div id="dots-overlay" class="modal hidden">
   <div class="modal-box wide" onclick="event.stopPropagation()">
-    <!-- PIN SCREEN -->
     <div id="pin-screen">
       <div class="modal-icon">🔐</div>
       <h2>Admin Access</h2>
       <p>Enter PIN to access features</p>
       <div class="pin-inputs">
-        <input type="password" id="pin-input" class="pin-field" maxlength="4" placeholder="••••" onkeydown="if(event.key==='Enter')checkPin()"/>
+        <input type="password" id="pin-input" class="pin-field" maxlength="4" placeholder="••••"/>
       </div>
       <button class="btn-submit small" onclick="checkPin()">🔓 Unlock</button>
       <div id="pin-error" class="pin-error hidden">❌ Wrong PIN. Try again.</div>
-      <button class="btn-cancel" onclick="closeDotsMenu()">Cancel</button>
+      <button class="btn-cancel" style="margin-top:10px" onclick="closeDotsMenu()">Cancel</button>
     </div>
-    <!-- FEATURES SCREEN -->
     <div id="features-screen" class="hidden">
       <div class="modal-icon">⚙️</div>
       <h2>Admin Features</h2>
       <div class="features-tabs">
-        <button class="ftab active" onclick="switchFTab('cmd-tab', this)">➕ Add Command</button>
-        <button class="ftab" onclick="switchFTab('evt-tab', this)">📡 Add Event</button>
+        <button class="ftab active" onclick="switchFTab('cmd-tab',this)">➕ Add Command</button>
+        <button class="ftab" onclick="switchFTab('evt-tab',this)">📡 Add Event</button>
       </div>
-      <!-- CMD TAB -->
       <div id="cmd-tab" class="ftab-content">
         <label class="flabel">Paste GoatBot / AutoBot Command Code:</label>
-        <textarea id="cmd-code-input" class="code-textarea" placeholder="module.exports = {&#10;  config: { name: 'tiktok', ... },&#10;  onStart: async ({ api, event, args }) => { ... }&#10;};"></textarea>
-        <div class="feature-note">Supports GoatBot format (onStart) and standard format (run).</div>
+        <textarea id="cmd-code-input" class="code-textarea" placeholder="module.exports = {&#10;  config: { name: 'kick', ... },&#10;  onStart: async ({ api, event }) => { ... }&#10;};"></textarea>
+        <div class="feature-note">✅ Supports GoatBot (onStart) & standard (run) format. Auto-syncs to ALL running bots.</div>
         <div class="feature-btns">
-          <button class="btn-submit small" onclick="submitCommand()">✅ Confirm & Add Command</button>
+          <button class="btn-submit small" onclick="submitCommand()">✅ Confirm &amp; Add</button>
           <button class="btn-small danger" onclick="document.getElementById('cmd-code-input').value=''">🗑 Clear</button>
         </div>
         <div id="cmd-result" class="feature-result hidden"></div>
       </div>
-      <!-- EVT TAB -->
       <div id="evt-tab" class="ftab-content hidden">
         <label class="flabel">Paste GoatBot / AutoBot Event Code:</label>
         <textarea id="evt-code-input" class="code-textarea" placeholder="module.exports = {&#10;  config: { name: 'leave', ... },&#10;  onStart: async ({ api, event }) => { ... }&#10;};"></textarea>
-        <div class="feature-note">Supports GoatBot format (onStart) and standard format (run).</div>
+        <div class="feature-note">✅ Supports GoatBot (onStart) & standard (run) format. Auto-syncs to ALL running bots.</div>
         <div class="feature-btns">
-          <button class="btn-submit small" onclick="submitEvent()">✅ Confirm & Add Event</button>
+          <button class="btn-submit small" onclick="submitEvent()">✅ Confirm &amp; Add</button>
           <button class="btn-small danger" onclick="document.getElementById('evt-code-input').value=''">🗑 Clear</button>
         </div>
         <div id="evt-result" class="feature-result hidden"></div>
@@ -185,7 +195,7 @@
   </div>
 </div>
 
-<!-- ===================== VERIFY MODAL ===================== -->
+<!-- ======= VERIFY MODAL ======= -->
 <div id="verify-modal" class="modal hidden">
   <div class="modal-box">
     <div class="modal-icon">🤖</div>
@@ -205,7 +215,6 @@
 </div>
 
 <div id="status-toast" class="toast hidden"></div>
-
 <script src="/socket.io/socket.io.js"></script>
 <script src="app.js"></script>
 </body>
