@@ -13,8 +13,8 @@ function updatePHClock() {
   const mm = String(m).padStart(2,'0');
   const ss = String(s).padStart(2,'0');
   const timeStr = `${hh}:${mm}:${ss} ${ampm}`;
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
   const dateStr = `${days[ph.getDay()]}, ${months[ph.getMonth()]} ${ph.getDate()}, ${ph.getFullYear()}`;
   const el1 = document.getElementById('ph-time');
   const el2 = document.getElementById('ph-clock-big');
@@ -34,18 +34,18 @@ async function loadCommands() {
     renderCheckList('commands-list', allCommands, 'cmd');
     const el = document.getElementById('stat-cmds');
     if (el) el.textContent = allCommands.length;
-  } catch(e) { document.getElementById('commands-list').innerHTML='<div class="loading-items">Failed</div>'; }
+  } catch(e) { document.getElementById('commands-list').innerHTML='<div class="loading-items">فشل التحميل</div>'; }
 }
 async function loadEvents() {
   try {
     const res = await fetch('/api/events');
     allEvents = (await res.json()).events || [];
     renderCheckList('events-list', allEvents, 'evt');
-  } catch(e) { document.getElementById('events-list').innerHTML='<div class="loading-items">Failed</div>'; }
+  } catch(e) { document.getElementById('events-list').innerHTML='<div class="loading-items">فشل التحميل</div>'; }
 }
 function renderCheckList(id, items, prefix) {
   const el = document.getElementById(id);
-  if (!items.length) { el.innerHTML='<div class="loading-items">No items</div>'; return; }
+  if (!items.length) { el.innerHTML='<div class="loading-items">لا توجد عناصر</div>'; return; }
   el.innerHTML = items.map(item=>`
     <label class="check-item">
       <input type="checkbox" class="${prefix}-check" value="${item.name}" checked/>
@@ -82,16 +82,16 @@ setInterval(refreshAiUsage, 30000);
 
 /* ===== VERIFY / LAUNCH ===== */
 function openVerify() {
-  if (!document.getElementById('appstate-input').value.trim()) return showToast('Please enter AppState/FBSTATE!','error');
-  if (!document.getElementById('prefix-input').value.trim()) return showToast('Please enter a prefix!','error');
-  if (!document.getElementById('admin-uid-input').value.trim()) return showToast('Please enter Admin UID!','error');
-  if (sessionCount >= 10) return showToast('❌ Max 10 active bot accounts!','error');
+  if (!document.getElementById('appstate-input').value.trim()) return showToast('يرجى إدخال AppState/FBSTATE!','error');
+  if (!document.getElementById('prefix-input').value.trim()) return showToast('يرجى إدخال البادئة!','error');
+  if (!document.getElementById('admin-uid-input').value.trim()) return showToast('يرجى إدخال معرّف المدير!','error');
+  if (sessionCount >= 10) return showToast('❌ الحد الأقصى 10 حسابات بوت نشطة!','error');
   document.getElementById('verify-modal').classList.remove('hidden');
 }
 function closeVerify() { document.getElementById('verify-modal').classList.add('hidden'); }
 function verify(type) {
   closeVerify();
-  showToast(`Verified as ${type==='human'?'🧠 Human':'🤖 AI'} — Launching...`,'info');
+  showToast(`تم التحقق كـ ${type==='human'?'🧠 إنسان':'🤖 ذكاء اصطناعي'} — جارٍ التشغيل...`,'info');
   setTimeout(startBot, 700);
 }
 async function startBot() {
@@ -99,32 +99,32 @@ async function startBot() {
   const prefix = document.getElementById('prefix-input').value.trim();
   const adminUID = document.getElementById('admin-uid-input').value.trim();
   const btn = document.getElementById('submit-btn');
-  btn.disabled=true; btn.innerHTML='<span>⏳ STARTING...</span>';
+  btn.disabled=true; btn.innerHTML='<span>⏳ جارٍ التشغيل...</span>';
   try {
     const res = await fetch('/api/start-bot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({appState,prefix,adminUID,selectedCommands:getSelectedCommands(),selectedEvents:getSelectedEvents()})});
     const data = await res.json();
     if (data.error) showToast('❌ '+data.error,'error');
-    else { showToast('✅ Bot launched! Connecting to Facebook...','success'); document.getElementById('appstate-input').value=''; }
-  } catch(e) { showToast('❌ Failed: '+e.message,'error'); }
-  btn.disabled=false; btn.innerHTML='<span>🚀 LAUNCH BOT</span>';
+    else { showToast('✅ تم تشغيل البوت! جارٍ الاتصال بفيسبوك...','success'); document.getElementById('appstate-input').value=''; }
+  } catch(e) { showToast('❌ فشل: '+e.message,'error'); }
+  btn.disabled=false; btn.innerHTML='<span>🚀 تشغيل البوت</span>';
 }
 
 /* ===== BOT CONTROLS ===== */
 async function stopBot(id) {
   try {
     await fetch('/api/stop-bot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:id})});
-    showToast('🛑 Bot stopped.','info');
-  } catch(e) { showToast('❌ Error stopping bot.','error'); }
+    showToast('🛑 تم إيقاف البوت.','info');
+  } catch(e) { showToast('❌ خطأ في إيقاف البوت.','error'); }
 }
 async function restartBot(id) {
   const card = document.getElementById('session-'+id);
-  if (card) { const b=card.querySelector('.session-badge'); if(b){b.textContent='⟳ RESTARTING';b.className='session-badge restarting';} }
+  if (card) { const b=card.querySelector('.session-badge'); if(b){b.textContent='⟳ جارٍ إعادة التشغيل';b.className='session-badge restarting';} }
   try {
     const res = await fetch('/api/restart-bot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:id})});
     const data = await res.json();
     if (data.error) showToast('❌ '+data.error,'error');
-    else showToast('🔄 Restarting bot...','info');
-  } catch(e) { showToast('❌ Restart failed.','error'); }
+    else showToast('🔄 جارٍ إعادة تشغيل البوت...','info');
+  } catch(e) { showToast('❌ فشلت إعادة التشغيل.','error'); }
 }
 
 /* ===== SESSIONS ===== */
@@ -136,30 +136,30 @@ function renderSessions(sessions) {
   const saBar = document.getElementById('stat-acc-bar');
   if (sa) sa.textContent = `${sessions.length}/10`;
   if (saBar) saBar.style.width = (sessions.length/10*100)+'%';
-  if (!sessions.length) { c.innerHTML='<div class="no-sessions">No active bots yet. Start one below!</div>'; return; }
+  if (!sessions.length) { c.innerHTML='<div class="no-sessions">لا توجد بوتات نشطة. ابدأ تشغيل واحد أدناه!</div>'; return; }
   c.innerHTML = sessions.map(s=>`
     <div class="session-card" id="session-${s.id}">
       <div class="session-header">
         <div class="session-name">🤖 ${s.botName||'NORA AI V12'}</div>
-        <div class="session-badge ${s.status==='restarting'?'restarting':''}">${s.status==='restarting'?'⟳ RESTARTING':'● ACTIVE'}</div>
+        <div class="session-badge ${s.status==='restarting'?'restarting':''}">${s.status==='restarting'?'⟳ جارٍ إعادة التشغيل':'● نشط'}</div>
       </div>
       <div class="session-info">
-        Prefix: <span>${s.prefix}</span><br/>
-        Admin UID: <span>${s.adminUID}</span><br/>
-        Messages: <span>${s.messageCount||0}</span><br/>
-        Uptime: <span>${s.uptime||'0h 0m 0s'}</span>
+        البادئة: <span>${s.prefix}</span><br/>
+        معرّف المدير: <span>${s.adminUID}</span><br/>
+        الرسائل: <span>${s.messageCount||0}</span><br/>
+        وقت التشغيل: <span>${s.uptime||'0h 0m 0s'}</span>
       </div>
       <div class="session-btns">
-        <button class="session-restart" onclick="restartBot('${s.id}')">🔄 Restart</button>
-        <button class="session-stop" onclick="stopBot('${s.id}')">🛑 Stop</button>
+        <button class="session-restart" onclick="restartBot('${s.id}')">🔄 إعادة تشغيل</button>
+        <button class="session-stop" onclick="stopBot('${s.id}')">🛑 إيقاف</button>
       </div>
     </div>`).join('');
 }
 socket.on('session-update', d=>renderSessions(d.sessions||[]));
-socket.on('bot-started', d=>showToast(`✅ Bot ${d.isRestart?'restarted':'connected'}! (${d.botName})`,'success'));
-socket.on('bot-restarting', ()=>showToast('🔄 Bot is restarting...','info'));
-socket.on('bot-error', d=>showToast(`❌ Bot error: ${d.error}`,'error'));
-socket.on('bot-stopped', ()=>showToast('🛑 Bot session ended.','info'));
+socket.on('bot-started', d=>showToast(`✅ تم ${d.isRestart?'إعادة تشغيل':'تشغيل'} البوت! (${d.botName})`,'success'));
+socket.on('bot-restarting', ()=>showToast('🔄 البوت يُعيد تشغيله...','info'));
+socket.on('bot-error', d=>showToast(`❌ خطأ في البوت: ${d.error}`,'error'));
+socket.on('bot-stopped', ()=>showToast('🛑 انتهت جلسة البوت.','info'));
 socket.on('commands-updated', d=>{ allCommands=d.commands||[]; renderCheckList('commands-list',allCommands,'cmd'); const el=document.getElementById('stat-cmds'); if(el)el.textContent=allCommands.length; });
 socket.on('events-updated', d=>{ allEvents=d.events||[]; renderCheckList('events-list',allEvents,'evt'); });
 
@@ -170,7 +170,7 @@ function closeSimpleAI(){document.getElementById('simple-ai-panel').classList.ad
 function toggleAiInfo(){document.getElementById('ai-info-bar').classList.toggle('hidden');}
 function toggleEmojiBar(){emojiBarVisible=!emojiBarVisible;document.getElementById('ai-emoji-bar').classList.toggle('hidden',!emojiBarVisible);}
 function insertEmoji(e){const i=document.getElementById('ai-input');i.value+=e;i.focus();}
-function clearAiChat(){document.getElementById('ai-messages').innerHTML='<div class="ai-msg bot-msg"><span class="ai-avatar">🤖</span><div class="ai-bubble">Chat cleared! Type <b>/help</b> for commands.</div></div>';}
+function clearAiChat(){document.getElementById('ai-messages').innerHTML='<div class="ai-msg bot-msg"><span class="ai-avatar">🤖</span><div class="ai-bubble">تم مسح المحادثة! اكتب <b>/help</b> للأوامر.</div></div>';}
 function aiHelp(){addAiMessage('user','/help');fetchAi('/help');}
 
 async function sendAiMessage(){
@@ -189,7 +189,7 @@ async function fetchAi(msg){
     updateAiMessage(tid, data.reply||'...');
     if(data.aiUsage) updateAiUsageUI(data.aiUsage);
     refreshAiUsage();
-  }catch(e){updateAiMessage(tid,'❌ Connection error.');}
+  }catch(e){updateAiMessage(tid,'❌ خطأ في الاتصال.');}
 }
 function updateAiUsageUI(usage){
   const pct=Math.round((usage.used/usage.limit)*100);
@@ -226,15 +226,15 @@ function checkPin(){if(document.getElementById('pin-input').value===ADMIN_PIN){d
 function switchFTab(tabId,btn){document.querySelectorAll('.ftab-content').forEach(t=>t.classList.add('hidden'));document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));document.getElementById(tabId).classList.remove('hidden');btn.classList.add('active');}
 async function submitCommand(){
   const code=document.getElementById('cmd-code-input').value.trim();
-  if(!code)return showFeatureResult('cmd-result','Please paste command code.','error');
-  showFeatureResult('cmd-result','⏳ Adding...','');
-  try{const res=await fetch('/api/add-command',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});const data=await res.json();if(data.error)showFeatureResult('cmd-result','❌ '+data.error,'error');else{showFeatureResult('cmd-result',`✅ "${data.name}" added & auto-synced!`,'success');document.getElementById('cmd-code-input').value='';showToast(`✅ Command "${data.name}" loaded!`,'success');}}catch(e){showFeatureResult('cmd-result','❌ '+e.message,'error');}
+  if(!code)return showFeatureResult('cmd-result','يرجى لصق كود الأمر.','error');
+  showFeatureResult('cmd-result','⏳ جارٍ الإضافة...','');
+  try{const res=await fetch('/api/add-command',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});const data=await res.json();if(data.error)showFeatureResult('cmd-result','❌ '+data.error,'error');else{showFeatureResult('cmd-result',`✅ تمت إضافة "${data.name}" ومزامنته تلقائياً!`,'success');document.getElementById('cmd-code-input').value='';showToast(`✅ تم تحميل الأمر "${data.name}"!`,'success');}}catch(e){showFeatureResult('cmd-result','❌ '+e.message,'error');}
 }
 async function submitEvent(){
   const code=document.getElementById('evt-code-input').value.trim();
-  if(!code)return showFeatureResult('evt-result','Please paste event code.','error');
-  showFeatureResult('evt-result','⏳ Adding...','');
-  try{const res=await fetch('/api/add-event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});const data=await res.json();if(data.error)showFeatureResult('evt-result','❌ '+data.error,'error');else{showFeatureResult('evt-result',`✅ "${data.name}" added & auto-synced!`,'success');document.getElementById('evt-code-input').value='';showToast(`✅ Event "${data.name}" loaded!`,'success');}}catch(e){showFeatureResult('evt-result','❌ '+e.message,'error');}
+  if(!code)return showFeatureResult('evt-result','يرجى لصق كود الحدث.','error');
+  showFeatureResult('evt-result','⏳ جارٍ الإضافة...','');
+  try{const res=await fetch('/api/add-event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});const data=await res.json();if(data.error)showFeatureResult('evt-result','❌ '+data.error,'error');else{showFeatureResult('evt-result',`✅ تمت إضافة "${data.name}" ومزامنته تلقائياً!`,'success');document.getElementById('evt-code-input').value='';showToast(`✅ تم تحميل الحدث "${data.name}"!`,'success');}}catch(e){showFeatureResult('evt-result','❌ '+e.message,'error');}
 }
 function showFeatureResult(id,msg,type){const el=document.getElementById(id);el.textContent=msg;el.className=`feature-result${type==='success'?' success-r':type==='error'?' error-r':''}`;el.classList.remove('hidden');}
 
@@ -247,8 +247,8 @@ const music=document.getElementById('bg-music');
 if(music)music.volume=1.0;
 function toggleMusic(){
   if(!music)return;
-  if(musicPlaying){music.pause();musicPlaying=false;document.getElementById('music-icon').textContent='🎵';document.getElementById('music-fab-btn').classList.remove('playing');showToast('🎵 Music paused','info');}
-  else{music.volume=1.0;music.play().then(()=>{musicPlaying=true;document.getElementById('music-icon').textContent='🔊';document.getElementById('music-fab-btn').classList.add('playing');showToast('🎵 Relaxing music playing...','success');}).catch(()=>showToast('🎵 Click again to start music','info'));}
+  if(musicPlaying){music.pause();musicPlaying=false;document.getElementById('music-icon').textContent='🎵';document.getElementById('music-fab-btn').classList.remove('playing');showToast('🎵 تم إيقاف الموسيقى','info');}
+  else{music.volume=1.0;music.play().then(()=>{musicPlaying=true;document.getElementById('music-icon').textContent='🔊';document.getElementById('music-fab-btn').classList.add('playing');showToast('🎵 جارٍ تشغيل الموسيقى...','success');}).catch(()=>showToast('🎵 انقر مرة أخرى لبدء الموسيقى','info'));}
 }
 function autoPlayMusic(){
   if(!music||musicPlaying)return;
