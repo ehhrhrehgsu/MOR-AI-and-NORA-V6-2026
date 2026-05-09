@@ -7,8 +7,8 @@ module.exports = {
   config: {
     name: 'ai',
     aliases: ['ask', 'nora', 'chat', 'gpt'],
-    description: 'Ask NORA AI (DeepSeek) anything',
-    usage: 'ai <question>',
+    description: 'اسأل NORA AI (DeepSeek) أي شيء',
+    usage: 'ai <السؤال>',
     category: 'AI'
   },
   async run({ api, event, args }) {
@@ -17,16 +17,16 @@ module.exports = {
     if (!question) return api.sendMessage(
       `🤖 𝗡𝗢𝗥𝗔 𝗔𝗜 𝗩𝟭𝟬\n` +
       `━━━━━━━━━━━━━━━━━━━\n` +
-      `❓ Please provide a question!\n` +
-      `📌 Usage: /ai <your question>`,
+      `❓ يرجى إدخال سؤال!\n` +
+      `📌 الاستخدام: /ai <سؤالك>`,
       threadID, messageID
     );
-    api.sendMessage(`🤖 𝗡𝗢𝗥𝗔 𝗔𝗜 is thinking...`, threadID);
+    api.sendMessage(`🤖 𝗡𝗢𝗥𝗔 𝗔𝗜 تفكر...`, threadID);
     try {
       const res = await axios.post(DEEPSEEK_URL, {
         model: 'deepseek-chat',
         messages: [
-          { role: 'system', content: 'You are NORA AI V10, a helpful and friendly AI assistant powered by Base44. Keep responses concise and helpful.' },
+          { role: 'system', content: 'أنت NORA AI V10، مساعد ذكاء اصطناعي مفيد وودود مدعوم من Base44. اجعل ردودك مختصرة ومفيدة.' },
           { role: 'user', content: question }
         ],
         max_tokens: 800,
@@ -38,7 +38,7 @@ module.exports = {
         },
         timeout: 30000
       });
-      const reply = res.data?.choices?.[0]?.message?.content?.trim() || 'No response generated.';
+      const reply = res.data?.choices?.[0]?.message?.content?.trim() || 'لم يتم توليد أي رد.';
       api.sendMessage(
         `🤖 𝗡𝗢𝗥𝗔 𝗔𝗜 𝗩𝟭𝟬 ✦ 𝗗𝗲𝗲𝗽𝗦𝗲𝗲𝗸\n` +
         `━━━━━━━━━━━━━━━━━━━\n` +
@@ -52,8 +52,8 @@ module.exports = {
       api.sendMessage(
         `🤖 𝗡𝗢𝗥𝗔 𝗔𝗜 𝗩𝟭𝟬\n` +
         `━━━━━━━━━━━━━━━━━━━\n` +
-        `❌ AI Error: ${e.response?.data?.error?.message || e.message}\n` +
-        `💡 Please try again.`,
+        `❌ خطأ في الذكاء الاصطناعي: ${e.response?.data?.error?.message || e.message}\n` +
+        `💡 يرجى المحاولة مجدداً.`,
         threadID, messageID
       );
     }
